@@ -68,11 +68,11 @@ recommendations AS (
     approximateSlotCount,
     onDemandCost,
     -- On-Demand recommendation score
-    (onDemandCost * 100) + IF(job_type = 'QUERY',100,200) + IF(executionTimeMs > 60000, 100, 200) +
+    (onDemandCost * 100) + IF(eventType = 'QUERY',100,200) + IF(executionTimeMs > 60000, 100, 200) +
         IF(approximateSlotCount > 500,500,100) + (queryCount * onDemandCost * -0.1) +
-        IF(job_type = 'LOAD', 100, 0) + IF(job_type = 'COPY', 100, 0) + IF(job_type = 'EXPORT', 100, 0) AS onDemandScore,
+        IF(eventType = 'LOAD', 100, 0) + IF(eventType = 'COPY', 100, 0) + IF(eventType = 'EXPORT', 100, 0) AS onDemandScore,
     -- Flat rate recommendation score
-    (onDemandCost * 125) + IF(job_type = 'QUERY', 200, 100) + IF(executionTimeMs > 60000, 200, 100) +
+    (onDemandCost * 125) + IF(eventType = 'QUERY', 200, 100) + IF(executionTimeMs > 60000, 200, 100) +
         IF(approximateSlotCount > 200, 100, 500) + (queryCount * 0.1 * onDemandCost) AS flatRateScore
   FROM
     src
